@@ -1,0 +1,7 @@
+{
+    "basescore" : 250,
+    "desc" : "<p>'Completely Automated Public Turing test to tell Computers and Humans Apart' is a mechanism that allows only a human to access a resource and not robots. <a href=\"http://${PUBLIC_HOST}:${PUBLIC_PORT}/cgi-bin/catchme.py\">Here</a> is a website that deploys such a captcha. Unfortunately it allows only 2 seconds to enter the text (oh the irony)",
+    "displayname" : "CAPTCHAre the Flag",
+    "threshold" : 0,
+    "weightmap" : {}
+}

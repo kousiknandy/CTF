@@ -1,0 +1,2 @@
+[{"identifier": "000102030405060708090A0B0C0D0E0F", "nonce": 3754873684, "data": "Genesis Block for CTF contest, all block chains must start with this block. This is equivalent to Big Bang, time didn't exist before this", "previous_hash": null},
+{"nonce": 5328, "previous_hash": "0000005b1bac8ae7d6f1915be4736339f95b24bf9dd119540629a6951c7bfe2b", "data": "there is no spoon", "identifier": "df52aa6771d9414591537b13df4aa932"}]

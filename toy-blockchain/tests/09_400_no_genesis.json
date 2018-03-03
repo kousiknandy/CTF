@@ -1,0 +1,3 @@
+[{"nonce": 28158506, "previous_hash": null, "data": "this is genesis block", "identifier": "5ee96d635d0a40eea18413741ec67774"},
+{"nonce": 33533, "previous_hash": "0000005b1bac8ae7d6f1915be4736339f95b24bf9dd119540629a6951c7bfe2b", "data": "middle block", "identifier": "d324963747f34ec4a113100fa49f6fba"},
+{"nonce": 34644, "previous_hash": "000031ce77252582e965542adcb533d892b256d45dec51c577f0da245a62c17e", "data": "third block", "identifier": "be36b5e7e7944bf187d0a439d4dc05c6"}]

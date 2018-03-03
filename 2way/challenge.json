@@ -1,0 +1,7 @@
+{
+    "basescore" : 100,
+    "desc" : "<p>Authenticate to the <a href='https://${PUBLIC_HOST}:${PUBLIC_PORT}'>web server</a> and capture your flag. We call it \"mutual authentication\" as a hint",
+    "displayname" : "2-Way street",
+    "threshold" : 0,
+    "weightmap" : {}
+}

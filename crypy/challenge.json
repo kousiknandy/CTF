@@ -1,0 +1,7 @@
+{
+    "basescore" : 250,
+    "desc" : "<p>CryPy was an early day ransomware that would encrypt important files in your home directory and ask for ransom in bitcoin. With <a href=\"${PUBLIC_FILE_URL}/CryPy_Source.py\">the source code of CryPy</a>, can you retrieve a file that contained your flag from <a href=\"${PUBLIC_FILE_URL}/CryPy_HOME.tar\">a tarball</a> of an unfortunate user's home directory?",
+    "displayname" : "Do not Cry over split files",
+    "threshold" : 0,
+    "weightmap" : {}
+}

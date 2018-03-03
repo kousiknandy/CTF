@@ -1,0 +1,5 @@
+[{"identifier": "000102030405060708090A0B0C0D0E0F", "nonce": 3754873684, "data": "Genesis Block for CTF contest, all block chains must start with this block. This is equivalent to Big Bang, time didn't exist before this", "previous_hash": null},
+{"nonce": 37947, "previous_hash": "00000000c55f6538ae0a9d1e094c41781f4d05d789ab435c5ec1d4b8bd8738ba", "data": "first", "identifier": "d056b19d92e14b018482371f46f8ebc5"},
+{"nonce": 13056, "previous_hash": "0000bd0fb41bb50ebd684dac4b9350bc6b4b6049fdfb5f256f62c8a0caa4acd1", "data": "Second", "identifier": "44e388e892f04ffaba5a48dc489eec01"},
+{"nonce": 37787, "previous_hash": "0000902865f7d72aeae49473fab6f1898017f4480cb3fff0f9c9590ee91e9277", "data": "Third", "identifier": "4b9af129de354a5393670452f6689374"}
+]

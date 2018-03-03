@@ -1,0 +1,7 @@
+{
+    "basescore" : 250,
+    "desc" : "<p>This challenge requires you to implement a simple block chain in python and post it to <a href=\"http://${PUBLIC_HOST}:${PUBLIC_PORT}/validate\">/validate</a> API. The genesis block is given in <a href=\"http://${PUBLIC_HOST}:${PUBLIC_PORT}/genesis\">/genesis</a> and the hash function implementation is given in <a href=\"http://${PUBLIC_HOST}:${PUBLIC_PORT}/hashfunction\">/hashfunction</a>. The chain must be at least 4 blocks long and block difficulty is increased 16 times every block from 4th block, starting at 4. <p>More details at <a href=\"http://${PUBLIC_FILE_URL}/blockchain_README.md\">README.md</a>.",
+    "displayname" : "Chain the blocks",
+    "threshold" : 0,
+    "weightmap" : {}
+}
