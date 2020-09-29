@@ -1,0 +1,74 @@
+The given challenge is a large innocent looking number hiding the flag
+in it. We can apply multiple transformations on this, e.g xor with next
+digit, do some popular encoding, but the biggest giveaway the preceeding
+text, where a cat seems to greet you. People familiar with pop culture
+(or a google search will do) will refer to the zero wing game's meme,
+and we immediately guess that we are talking about 'bases'. 
+
+So we convert the number to various bases and see which is promising
+(for symbols, we take 0-9, a-z and follow ASCII order):
+
+10 322145362233401483623797406212442570811157273117325550441636938298904
+11 66299a491a75613761a8503a35a1687218268080626a34a491122848177153a124
+12 338514b11a981870378148a12993ba125456369730015845a70b5b8649948020
+13 37c12341b5901bb97cb313292433152897aa2226468009ba233c46649b8ba9
+14 79b3200b2500c76099175022c13c17026634d393b217796724dd8d9b0196
+15 1e883714dcd48ac6a7e6c1579776857dcc961e6b49a2b9db44e573867d9
+16 bf2f3ff16495c8c837c392a72b72961defb2754cd23708102995eb618
+17 6de10805247b5b8f3d14b8c3fdeab421187dgc1612a81d19d56d551g
+18 5538eec705d25994314a8895fchaf52h1eef53913c26g915c1haad6
+19 58026b38c5h89di5di0a1d04442fhg3b81gh8ggi6hf1d38hh42df0
+20 7314a4djejjh239fj30fjh3eh58e01f87e800jihi45668h347754
+21 biaeegi2d2fk0giac8fck763ebc8ijgdc3k40ihc7hk15k934966
+22 1284gljb88j9ei1b57e96jbi8h03a44eejkg54c06ia96icjajc4
+23 2egh0hhih9he75hi3g0h090jm4bj2kd4888b90b456ghee784e4
+24 7d282k2ij28i0chn4imk2lhbjl3fgi036bh4ikih8j829g1010
+25 10d1lg1c45gfeoc955gm77oafi0ieo94loclee2djo7jmc1364
+26 3mpn93li2n0phm7632eg1lln7ojiondkc5ilo7ke9mkkg49bm
+27 h3jc6bbqqkl34n3c4m1b99dqqb2bcioljaf1f99iqab10lko
+28 32noagk2kc041i5ohk624ncingb9dql7rla7nlq4ji46mlbk
+29 h8a5842mdfem0qn8apsf58ac0caoq66aknsso32cb9rhb7a
+30 3j184rs3hmtgsnqlb7q6s4ctr7dnt3519op5fihffacld6o
+31 ossksl0rl2mi3296jjecfrb72ql04cc9553bupi6rj8f76
+32 5v5svv2p4lp343fgsiksln55gttup7aj6i6s410acltdgo
+33 1gc3t6li08u4rg5t05nmtn6ddjbn20rmojdp799gabaiff
+34 d99wi2rf8vo43k7fws2rqil3stujflbhk7je9i5mhs9qg
+35 3oqfjm7qcae9r63vxm2fvb8ngavs0nft1j2u50dgquu7y
+36 12n29v37ab6q8czoa6gc0zspa878gwuy199m3g7s6q2oo
+37 bx4rwyerhzlt2irmnecynv{3tnu{3ttlh7wkg5eel7uc
+38 3tmny79sz3on1miy6vjr2d5tttv5kf5gdjly{xk50c{0
+39 1992flag{4a9s5h8nnx2i058espdvwk4ug}s|m0iaz}9
+
+Finally at base 39, the pattern seems promising - it contains what
+we're searching for ... a "flag{". But we need to recover the rest.
+This is where the second note is helpful, which says 0 or 1 can be
+either one. So we construct the number with all possible combination
+and check the output. The following snippet of code can be helpful:
+
+t = "322{}453622334{}{}4836237974{}62{}244257{}8{}{}{}57273{}{}732555{}44{}6369382989{}4"
+for i in range(16384): 
+    b1 = "{0:014b}".format(i)
+    n = int(t.format(*b1))
+    # now print n in base 39
+
+However we still have 16000+ potential flags to deal with, how
+should we narrow it down to the actual flag? Again we note that
+the number is part of dialog (again a google search will reveal):
+
+ Captain: It's you!!
+ CATS: How are you gentlemen!!
+ CATS: All your base are belong to us.    <-----------
+ CATS: You are on the way to destruction.
+
+So, with the spirit of the dialog, the flag has to relate to the
+next, perhaps the most famous, sentence. We grep for words from
+the outputs, taking care of l337 conversions. For example filtering
+via `grep "flag{.*}" | grep base` brings us down to 81 choices, and
+further filtering `grep "flag{.*}" | grep base | grep us` brings us
+to two:
+
+1992flag{catsa||y0urbasearebe10ngt0us}0wings
+1992flag{catsa||y0urbasearebe10ngt0us}0wing}
+
+From here the flag is easy to guess: catsa||y0urbasearebe10ngt0us
+which is a paraphrase of the dialog continued.

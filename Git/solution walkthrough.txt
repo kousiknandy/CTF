@@ -1,0 +1,119 @@
+Unzip the given bundle.
+
+$ ls -a
+.  ..  .git  flag.txt
+$ cat flag.txt
+$
+
+There is an empty flag.txt (which is a hint that file is related to the flag
+we're looking for. However the bundle seems to be a git repository also. Let
+us explore the repository.
+
+$ git log
+commit 7136a6ac780fc1517816eb7d2e29f68e32854520
+Author: ctf <ctf@cisco.com>
+Date:   Sun Aug 2 05:36:52 2020 +0530
+$
+
+Not much useful but ...
+
+$ git branch
+  flag
+  * master
+$ git checkout flag
+Switched to branch 'flag'
+$ git log
+commit c4d4c3c005bcbfeafe2e1c40ef774a1a0fdd2d08
+Author: ctf <ctf@cisco.com>
+Date:   Sun Aug 2 05:39:09 2020 +0530
+
+commit 8661cc491925c9ea4fc4b4b18ce46769ee656958
+Author: ctf <ctf@cisco.com>
+Date:   Sun Aug 2 05:38:31 2020 +0530
+
+commit 7136a6ac780fc1517816eb7d2e29f68e32854520
+Author: ctf <ctf@cisco.com>
+Date:   Sun Aug 2 05:36:52 2020 +0530
+$ cat flag.txt
+$
+
+There is a branch which has multiple commits. That looks more promising.
+Although the flag.txt is blank here too, perhaps our flag is hidden in
+one of the commits? Let's go diff'ing:
+
+$ git diff 8661cc491925c9ea4fc4b4b18ce46769ee656958^
+$ git diff c4d4c3c005bcbfeafe2e1c40ef774a1a0fdd2d08^
+error: inflate: data stream error (incorrect data check)
+error: unable to unpack 3cee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a header
+fatal: unable to read 3cee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a
+$
+
+So it seems one of the git object is corrupted which is preventing the
+diff to occur. This also hints we're in the correct track, hopefully
+repairing the corrupted git object can help us to extract the flag.
+
+Let's check out the corrupted object:
+
+$ file .git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a
+.git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a: zlib compressed data
+$
+$ pigz -d -z .git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a
+pigz: abort: corrupted zlib stream -- adler32 mismatch: .git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a
+$
+
+It is zlib compressed object, however neither git nor typical tools can
+decompress it ... complains about checksum corruption. We can check the
+binary contents:
+
+$ hexdump -C .git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a
+00000000  78 01 4b ca c9 4f 52 30  32 62 48 cb 49 4c af 76  |x.K..OR02bH.IL.v|
+00000010  cf 2c 89 37 48 ca 4a 2d  a9 88 f7 28 cd 2b a9 e5  |.,.7H.J-...(.+..|
+00000020  02 00 66 6c 61 67                                 |..flag|
+
+Last 4 bytes should have been the adler32 checksum which is replaced
+by the string "flag" and that is causing the checksum mismatch. However
+without the plaintext it is not possible to repair the checksum. So
+let's use a method that can use zlib in streaming mode, that does not
+require the checksum:
+
+$ python3
+Python 3.5.2 (default, Jul 17 2020, 14:04:10)
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import zlib
+>>> filename = ".git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a"
+>>> compressed_contents = open(filename, 'rb').read()
+>>> decompressor = zlib.decompressobj()
+>>> data = decompressor.decompress(compressed_contents, 30)
+>>> print(data)
+b'blob 22\x00flag{Git_0bjetx_Hunt}\n'
+>>>
+
+The number of bytes (30) can be found by a little trial and error.
+So there is our flag, hidden in the blob.
+
+We can compute the actual checksum now:
+
+>>> cksum = zlib.adler32(data)
+>>> print("{:x}".format(cksum))
+9dec0a8e
+>>>
+
+And if we replace "flag" by binary 9dec0a8e in the last 4 bytes of the
+object, git starts working:
+
+$ git diff c4d4c3c005bcbfeafe2e1c40ef774a1a0fdd2d08^
+diff --git a/flag.txt b/flag.txt
+index 3cee07a..e69de29 100644
+--- a/flag.txt
++++ b/flag.txt
+@@ -1 +0,0 @@
+-flag{Git_0bjetx_Hunt}
+
+I also found an easier way, using zlib-flate:
+
+$ zlib-flate -uncompress < .git/objects/3c/ee07a581f7ce6b8f64b8fa6aaa7510d4e39c6a
+blob 22flag{Git_0bjetx_Hunt}
+$
+
+Huh ... so much for checksum!
